@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ôn thi Sinh hóa</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f7f6;--card:#fff;--ink:#12302f;--mut:#5d7a78;--ac:#0d9488;--ac2:#6366f1;--ok:#16a34a;--no:#dc2626;--line:#d3e4e1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#08161c;--card:#0f2530;--ink:#e3f4f1;--mut:#8fb3b0;--ac:#2dd4bf;--ac2:#818cf8;--line:#1d3b47}}
+:root[data-theme="dark"]{--bg:#08161c;--card:#0f2530;--ink:#e3f4f1;--mut:#8fb3b0;--ac:#2dd4bf;--ac2:#818cf8;--line:#1d3b47}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.5;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='104'%3E%3Cpath d='M30 2l28 16v32L30 66 2 50V18z M90 54l28 16v32L90 118 62 102V70z' fill='none' stroke='%230d9488' stroke-opacity='.12' stroke-width='1.5'/%3E%3Ccircle cx='30' cy='2' r='3' fill='%236366f1' fill-opacity='.2'/%3E%3C/svg%3E")}
+.wrap{max-width:760px;margin:0 auto;padding:18px 14px 60px}
+header{padding:26px 20px;border-radius:22px;background:linear-gradient(135deg,#0d9488,#6366f1);color:#fff;position:relative;overflow:hidden}
+header h1{margin:0;font-size:1.7rem;font-weight:800}header p{margin:6px 0 0;opacity:.9;font-size:.92rem}
+header .mol{position:absolute;right:-10px;top:-10px;font-size:5.5rem;opacity:.15;font-weight:800}
+.tabs{display:flex;gap:8px;margin:18px 0 10px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 14px;border-radius:999px;font:600 .88rem inherit;font-family:inherit;cursor:pointer}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.sub .chip.on{background:var(--ac2);border-color:var(--ac2)}
+.desc{color:var(--mut);font-size:.85rem;margin:2px 2px 14px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 4px 14px rgba(13,148,136,.07)}
+.q h3{margin:0 0 10px;font-size:1rem;font-weight:600}.q h3 span{color:var(--ac);font-weight:800;margin-right:6px}
+.opt{display:block;width:100%;text-align:left;margin:7px 0;padding:11px 13px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:inherit;cursor:pointer}
+.opt:hover{border-color:var(--ac)}
+.opt.ok{background:var(--ok);border-color:var(--ok);color:#fff}.opt.no{background:var(--no);border-color:var(--no);color:#fff}
+.opt.dim{opacity:.55}
+.row{display:flex;gap:8px}.row .opt{text-align:center;font-weight:600}
+input.fill{width:100%;padding:11px 13px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:inherit;margin-top:4px}
+.go{margin-top:8px;padding:9px 16px;border:0;border-radius:10px;background:var(--ac);color:#fff;font:600 .9rem inherit;font-family:inherit;cursor:pointer}
+.fb{margin-top:10px;font-size:.92rem;color:var(--ink);line-height:1.6}.fb b{color:var(--ink)}
+.st{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}textarea{width:100%;min-height:110px;padding:11px 13px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:inherit}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.9rem}
+.bar button{border:0;background:none;color:var(--ac);font:600 .85rem inherit;font-family:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="mol">⬡</div><h1>🧬 Ôn thi Sinh hóa</h1><p>8 đề theo chủ đề · Trắc nghiệm · Đúng/Sai · Điền khuyết</p></header>
+<div class="tabs" id="topics"></div>
+<div class="tabs sub" id="types"></div>
+<div class="desc" id="desc"></div>
+<div class="bar"><span id="score"></span><button onclick="render()">↻ Làm lại</button></div>
+<div id="notes" class="q" style="display:none"><h3>📝 Sổ tay cách đọc đồng phân</h3><div class="fb" id="gd">Gợi ý: <b>1)</b> Fischer (đường thẳng, có CHO) hay Haworth (vòng)? <b>2)</b> Fischer: nhìn OH ở carbon cuối, phải = D, trái = L. <b>3)</b> Đọc C2→C5 so với D-glucose (phải–trái–phải–phải): đảo C4 = galactose, đảo C2 = mannose. <b>4)</b> Haworth: OH ở C1 xuống = α, lên = β; C4 lên = galactose, C2 lên = mannose.</div><textarea id="nt" placeholder="Viết cách đọc của riêng bạn ở đây (tự lưu trên máy này)..."></textarea></div>
+<div id="list"></div>
+</div>
+<script>
+// mc: [câu hỏi, [lựa chọn], đáp án đúng(index), giải thích]; tf: [nhận định, đúng?, giải thích]; fb: [câu có ___, [đáp án chấp nhận], giải thích]
+const D=[
+{n:"Glucid",e:"🍬",mc:[
+["Saccharose gồm:",["Glucose + glucose","Glucose + fructose","Glucose + galactose","Glucose + mannose"],1],
+["Đường được tìm thấy trong sữa là:",["Galactose","Glucose","Fructose","Lactose"],3],
+["Các đường được tìm thấy trong RNA là:",["Ribose","Deoxyribose","Ribulose","Erythrose"],0],
+["Các đường được tìm thấy trong DNA là:",["Xylose","Ribose","Deoxyribose","Ribulose"],2],
+["Tinh bột là một:",["PS (polysaccharide)","MS","DS","TS"],0],
+["Carbohydrate phong phú nhất trong tự nhiên:",["Tinh bột","Glycogen","Cellulose","Chitin"],2],
+["Đường phân 1 mol glucose trong điều kiện kỵ khí thu được bao nhiêu mol ATP?",["1","2","8","30"],1],
+["N-acetylneuraminic acid là ví dụ của:",["Sialic acid","Mucic acid","Glucuronic acid","Hippuric acid"],0],
+["N-Acetylglucosamine hiện diện trong:",["Axit hyaluronic","Chondroitin sulfat","Heparin","Warfarin"],0],
+["Tiểu phần đơn vị của axit hyaluronic là:",["N-acetyl glucosamine và D-glucuronic axit","N-acetyl galactosamine và D-glucuronic acid","N-acetyl glucosamine và galactose","N-acetyl galactosamine và L-iduronic"],0],
+["Dịch khớp có chứa:",["Heparin","Axit hyaluronic","Chondroitin sulfat","Keratin sulphate"],1],
+["Oxy hóa chất nào trong cơ thể sinh nhiều calo nhất?",["Glucose","Glycogen","Protein","Lipid"],3,"1 g lipid ≈ 9 kcal; glucid, protein ≈ 4 kcal."]],
+tf:[["Saccharose được cấu tạo từ glucose và fructose.",true],["Deoxyribose có trong RNA.",false,"Deoxyribose có trong DNA; RNA chứa ribose."],["Tinh bột là một polysaccharide.",true],["Lactose là đường có trong sữa.",true],["Cellulose là carbohydrate phong phú nhất trong tự nhiên.",true],["Đường phân kỵ khí 1 mol glucose cho 30 mol ATP.",false,"Chỉ thu được 2 ATP."],["Dịch khớp chứa axit hyaluronic.",true],["Warfarin là một glycosaminoglycan.",false,"Warfarin là thuốc chống đông, không phải GAG."]],
+fb:[["Saccharose gồm glucose + ___.",["fructose"]],["Đường có trong RNA là ___.",["ribose"]],["Đường có trong DNA là ___.",["deoxyribose"]],["Đường có trong sữa là ___.",["lactose"]],["N-acetylneuraminic acid là một loại ___ acid.",["sialic"]],["Đơn vị của axit hyaluronic: N-acetyl glucosamine và D-___ axit.",["glucuronic"]]]},
+{n:"Amino acid – Protein",e:"🧫",mc:[
+["Mọi protein chứa:",["20 amino acid như nhau","Amino acid khác nhau","300 amino acid tồn tại trong tự nhiên","Chỉ một vài amino acid"],1],
+["Proteins chứa:",["Chỉ L-α-amino acid","Chỉ D-amino acid","DL-amino acid","Glucosamin"],0],
+["Amino acid KHÔNG chứa lưu huỳnh:",["Cysteine","Cystine","Methionine","Threonine"],3],
+["Amino acid nào không có tính quang hoạt?",["Glycine","Serine","Threonine","Valine"],0,"Glycine có R = H nên không có C bất đối."],
+["Ở pH trung hòa, hỗn hợp amino acid trong dung dịch phần lớn là:",["Ion lưỡng cực","Phân tử vô cực","Dương và hóa trị một","Kỵ nước"],0],
+["Phát biểu đúng về amino acid ở pH sinh lý:",["Mọi amino acid đều chứa cực âm và cực dương","Mọi amino acid chứa chuỗi bên tích điện dương","Vài amino acid chỉ chứa cực dương","Mọi amino acid chứa chuỗi bên tích điện âm"],0],
+["Đâu là một tripeptide?",["Anserine","Oxytocin","Glutathione","Kallidin"],2],
+["Histamin được sản xuất từ sự decarboxylation amino acid:",["Arginine","Aspartic acid","Glutamine","Histidine"],3],
+["Một ví dụ về chromoprotein là:",["Hemoglobin","Sturine","Nuclein","Gliadin"],0],
+["Bào quan tham gia tổng hợp protein là:",["Hạt nhân","Ribosome","Ty thể","Mạng lưới nội chất nhám"],1]],
+tf:[["Protein được cấu tạo chỉ từ L-α-amino acid.",true],["Cysteine và methionine chứa lưu huỳnh.",true],["Threonine chứa lưu huỳnh.",false],["Glycine có tính quang hoạt.",false,"Glycine không có C bất đối."],["Glutathione là một tripeptide.",true],["Histamin tạo ra từ histidine qua khử carboxyl.",true],["Hemoglobin là một chromoprotein.",true],["Ribosome là nơi tổng hợp protein.",true]],
+fb:[["Histamin được tạo từ sự decarboxylation của ___.",["histidine"]],["Amino acid không có tính quang hoạt là ___.",["glycine"]],["Ở pH trung hòa, amino acid tồn tại chủ yếu dạng ion ___ cực.",["lưỡng","luong","lưỡng cực","zwitterion"]],["Hemoglobin là ví dụ của ___protein.",["chromo"]],["Bào quan tổng hợp protein là ___.",["ribosome"]]]},
+{n:"Lipid – Lipoprotein",e:"🧈",mc:[
+["Lipoprotein nào chuyển cholesterol tự do từ tế bào ngoại biên về gan để oxy hóa và đào thải?",["β-LP","VLDL","CM","HDL"],3],
+["Lipoprotein nào có vai trò ngược lại với LDL trong cơ chế sinh xơ vữa động mạch?",["CM","HDL","IDL","VLDL"],1],
+["Cholesterol có nhiều nhất trong lipoprotein nào?",["VLDL","HDL","LDL","CM"],2],
+["Oxy hóa chất nào sinh nhiều calo nhất?",["Glucose","Glycogen","Protein","Lipid"],3]],
+tf:[["HDL vận chuyển cholesterol từ ngoại biên về gan.",true],["HDL có tác dụng thúc đẩy xơ vữa động mạch.",false,"HDL bảo vệ, ngược với LDL."],["LDL chứa nhiều cholesterol nhất.",true],["Lipid cho nhiều năng lượng hơn glucid khi oxy hóa.",true]],
+fb:[["Lipoprotein đưa cholesterol về gan là ___.",["hdl"]],["Lipoprotein chứa nhiều cholesterol nhất là ___.",["ldl"]],["Chất sinh nhiều calo nhất khi oxy hóa là ___.",["lipid"]]]},
+{n:"Máu – Nước tiểu – Điện giải",e:"🩸",mc:[
+["Chọn câu đúng:",["Khi sợ hãi thì đường huyết giảm","Uống rượu cũng làm giảm đường huyết","Đường huyết tăng khi bị gây mê","Bệnh Addison khiến đường huyết tăng"],2,"⚠ Câu này mơ hồ (rượu cũng làm giảm đường huyết). Hãy đối chiếu đáp án của giảng viên."],
+["Albumin giảm rõ rệt trong trường hợp nào?",["Hội chứng thận hư","Suy gan giai đoạn cuối","Ung thư giai đoạn cuối","Tất cả các trường hợp trên"],3],
+["Protein niệu bất thường có thể do:",["Thay đổi tính thấm màng lọc cầu thận","Protein huyết tương tăng","Thay đổi tái hấp thu của ống thận","Tất cả các hiện tượng trên"],3,"⚠ Hãy đối chiếu đáp án của giảng viên."],
+["Các chất bất thường trong nước tiểu, chọn câu SAI:",["Glucose","Protein","Sắc tố mật = muối mật","Na+"],3],
+["Thành phần ảnh hưởng nhiều nhất đến nồng độ osmol:",["Creatinin","Urê","Natri","Kali"],2],
+["Nhóm chất ảnh hưởng nhiều đến nồng độ osmol:",["Natri, ure, creatinin","Natri, ure, glucose","Natri, kali, protein","Glucose, kali, calci"],1],
+["Các chất điện giải quyết định sự phân bố và vận chuyển nước do tạo nên:",["Áp suất thẩm thấu","Áp suất thủy tĩnh","Áp suất keo","Tất cả đều đúng"],0],
+["Xét nghiệm tăng ure huyết và giảm ure niệu cho biết tình trạng:",["Suy chức năng gan","Cường giáp","Xơ vữa động mạch","Suy chức năng thận"],3],
+["Người ta thường đánh giá chức năng thận bằng xét nghiệm:",["Đo nồng độ creatinin máu","Myoglobin niệu","ASAT/ALAT","SChE"],0],
+["Sữa thiếu hụt vitamin nào?",["Vitamin C","Vitamin A","Vitamin B2","Vitamin K"],0]],
+tf:[["Natri là thành phần ảnh hưởng nhiều nhất đến nồng độ osmol.",true],["Điện giải quyết định phân bố nước nhờ áp suất thẩm thấu.",true],["Tăng ure huyết kèm giảm ure niệu gợi ý suy chức năng thận.",true],["Creatinin máu dùng để đánh giá chức năng thận.",true],["Na+ là chất bất thường trong nước tiểu.",false,"Na+ là thành phần bình thường."],["Sữa thiếu vitamin C.",true],["Albumin giảm rõ rệt trong suy gan giai đoạn cuối.",true]],
+fb:[["Chất ảnh hưởng nhiều nhất đến nồng độ osmol là ___.",["natri","na"]],["Đánh giá chức năng thận bằng nồng độ ___ máu.",["creatinin","creatinine"]],["Tăng ure huyết, giảm ure niệu → suy chức năng ___.",["thận"]],["Sữa thiếu vitamin ___.",["c"]]]},
+{n:'Bài 1 – Đại cương',e:'🧪',mc:[
+['Hóa sinh học là môn nghiên cứu về:',['Hóa học của chất sống','Hóa học của đất đá','Vật lý của tế bào','Giải phẫu cơ thể'],0,'Hóa sinh = hóa học của sự sống.'],
+['4 nguyên tố cơ bản của cơ thể sống là:',['O, C, H, N','O, Ca, P, K','C, H, Na, Cl','H, O, Fe, Zn'],0,'Bốn nguyên tố này xây dựng tế bào và mô. Mẹo: O-C-H-N.'],
+['Nguyên tố nào là vi lượng?',['Zn','C','H','N'],0,'Vi lượng (rất ít nhưng cần): Zn, Fe, Cu. C, H, N thuộc đa lượng.'],
+['Đơn vị cấu tạo của protein là:',['Acid amin','Monosaccharide','Acid béo','Mononucleotid'],0,'Glucid: monosaccharide. Lipid: acid béo + glycerol. Protein: acid amin. Acid nucleic: mononucleotid.'],
+['Đơn vị cấu tạo của DNA, RNA là:',['Mononucleotid','Acid amin','Glucose','Acid béo'],0,'Acid nucleic được xây từ các mononucleotid.'],
+['Enzym có bản chất là:',['Protein','Lipid','Glucid','Acid nucleic'],0,'Enzym là protein, do mọi tế bào sản xuất, xúc tác phản ứng hóa học.'],
+['Hormon do đâu sản xuất?',['Các tuyến chuyên biệt','Mọi tế bào','Chỉ gan','Chỉ thận'],0,'Enzym thì mọi tế bào làm ra, còn hormon do tuyến chuyên biệt tiết ra để điều hòa.'],
+['Sinh vật tự dưỡng là sinh vật:',['Dùng ánh sáng để tổng hợp chất hữu cơ từ CO₂, H₂O, NH₃','Chỉ ăn chất hữu cơ có sẵn','Không cần năng lượng','Chỉ sống trong cơ thể người'],0,'Cây xanh là tự dưỡng. Động vật, nấm là dị dưỡng vì phải ăn thức ăn có sẵn.'],
+['Tế bào nhân sơ khác nhân thật ở chỗ:',['Không có màng nhân','Không có màng tế bào','Không có ribosome','Không có DNA'],0,'Nhân sơ (vi khuẩn) vẫn có DNA, nhưng không có màng nhân.'],
+['Ribosome là bào quan:',['Không có màng, tổng hợp protein','Có màng đôi, tạo năng lượng','Chứa nhiều hydrolase','Phân giải H₂O₂'],0,'Ribosome không màng, chứa nhiều RNA, lắp ráp protein.'],
+['Chu trình acid citric và phosphoryl oxy hóa diễn ra ở:',['Ty thể','Lysosom','Golgi','Ribosome'],0,'Ty thể là nhà máy năng lượng, có màng đôi.'],
+['Bào quan chứa nhiều hydrolase là:',['Lysosom','Peroxisom','Ty thể','Nhân'],0,'Lysosom giống bộ phận tiêu hóa của tế bào (hydrolase, phosphatase acid).'],
+['Catalase phân giải H₂O₂ có ở:',['Peroxisom','Lysosom','Golgi','Nhân'],0,'Peroxisom có catalase để phân giải H₂O₂ độc.'],
+['Giai đoạn S của chu trình tế bào là lúc:',['Tổng hợp DNA (nhân đôi)','Tích lũy vật chất','Chuẩn bị phân chia','Tế bào phân chia'],0,'G1 tích lũy, S nhân đôi DNA, G2 chuẩn bị, M phân chia.']
+],tf:[
+['Zn, Fe, Cu là nguyên tố vi lượng.',true,'Đúng, chiếm tỉ lệ rất thấp nhưng hoạt hóa enzym, tạo máu...'],
+['Enzym có bản chất là lipid.',false,'Enzym là protein.'],
+['Tế bào nhân sơ có màng nhân.',false,'Nhân sơ không có màng nhân, DNA nằm ở vùng nhân.'],
+['Ribosome có màng đôi.',false,'Ribosome không có màng. Màng đôi chỉ có ở nhân và ty thể.'],
+['Sinh vật dị dưỡng tự tổng hợp chất hữu cơ từ CO₂ nhờ ánh sáng.',false,'Đó là tự dưỡng. Dị dưỡng phải ăn chất hữu cơ có sẵn.'],
+['Sản phẩm cuối cùng của chuyển hóa gồm CO₂, H₂O, ure, acid uric.',true,'Đúng, các chất này được đào thải ra ngoài.']
+],fb:[
+['4 nguyên tố cơ bản: O, C, H và ___.',['n'],'Nitơ (N) có trong protein và acid nucleic.'],
+['Enzym có bản chất là ___.',['protein'],'Enzym là protein.'],
+['Tổng hợp DNA diễn ra ở pha ___ của chu trình tế bào.',['s'],'S = Synthesis, tổng hợp DNA.'],
+['Bào quan tổng hợp protein là ___.',['ribosome','ribosom'],'Ribosome lắp ráp protein.']
+]},
+{n:'Bài 2 – Glucid (theo slide)',e:'📘',mc:[
+['Maltose, lactose, sacarose thuộc nhóm:',['Disaccharid (đường đôi)','Monosaccharid','Polysaccharid thuần','Polysaccharid tạp'],0,'Đường đôi = 2 đường đơn nối bằng liên kết glycosid.'],
+['Tinh bột, glycogen, cellulose thuộc:',['PS thuần','PS tạp','Disaccharid','Monosaccharid'],0,'PS thuần chỉ gồm một loại đường (glucose) lặp lại. PS tạp thì có nhiều loại đường hoặc dẫn xuất (hyaluronic, chondroitin sulfat, heparin).'],
+['Glucose là aldose, còn fructose là:',['Cetose','Aldose','Triose','Pentose'],0,'Aldose có nhóm aldehyd, cetose có nhóm ceton. Cetose gồm dihydroxyaceton, erythrulose, ribulose, fructose.'],
+['Maltose gồm:',['Glucose + glucose (α-1,4)','Glucose + fructose','Glucose + galactose','Fructose + galactose'],0,'Maltose có ở mầm lúa, kẹo mạch nha, có tính khử.'],
+['Lactose gồm:',['Glucose + galactose (β-1,4)','Glucose + glucose','Glucose + fructose','Galactose + galactose'],0,'Đường sữa. Còn thấy trong nước tiểu phụ nữ trước và sau sinh.'],
+['Disaccharid nào KHÔNG có tính khử?',['Sacarose','Maltose','Lactose','Cả ba đều có'],0,'Sacarose nối α-1-β-2 giữa hai carbon bán acetal nên không còn nhóm khử tự do.'],
+['Dạng D của đường được xác định bằng:',['OH ở carbon xa nhóm carbonyl nhất nằm bên phải','OH ở C1 nằm phía dưới','Có nhóm ceton','Có vòng 6 cạnh'],0,'Công thức thẳng: OH ở C xa carbonyl nhất bên phải là D, bên trái là L.'],
+['Trong công thức Haworth, OH glycosid (C1) dạng α nằm:',['Phía dưới mặt phẳng vòng','Phía trên','Bên trái','Không có OH'],0,'Chỉ cần nhớ: α ở dưới, β ở trên.'],
+['Glucose bị oxy hóa ở C1 và C6 tạo ra lần lượt:',['Acid gluconic và acid glucuronic','Acid glucuronic và acid gluconic','Sorbitol và acid gluconic','Furfural và osazon'],0,'C1 (nhóm aldehyd) thành gluconic. C6 (CH₂OH cuối) thành glucuronic, có vai trò khử độc.'],
+['Phản ứng Fehling dựa vào tính chất nào?',['Tính khử (tạo Cu₂O đỏ gạch)','Tính oxi hóa','Tạo ester','Tạo glycosid'],0,'Đường khử Cu²⁺ thành Cu⁺ trong kiềm nóng, tạo kết tủa đỏ gạch Cu₂O.'],
+['Test Seliwanoff dùng để phân biệt:',['Fructose (đỏ) với glucose, galactose (không màu)','Maltose với lactose','Tinh bột với glycogen','Pentose với hexose'],0,'Fructose là cetose nên cho màu đỏ cam với Seliwanoff.'],
+['Test iod: dung dịch tinh bột cho màu:',['Xanh','Đỏ','Không màu','Vàng'],0,'Tinh bột + iod cho màu xanh. Glycogen và dextrin cho màu đỏ.'],
+['Glucose và galactose khác nhau (epimer) ở carbon:',['C4','C2','C3','C5'],0,'Galactose = glucose đảo OH ở C4. Mannose = glucose đảo OH ở C2.']
+],tf:[
+['Maltose gồm hai glucose nối bằng liên kết α-1,4.',true,'Đúng, maltose có tính khử.'],
+['Sacarose có tính khử mạnh.',false,'Sacarose không có tính khử.'],
+['Lactose gồm glucose và fructose.',false,'Lactose = glucose + galactose. Glucose + fructose là sacarose.'],
+['Tinh bột là PS tạp.',false,'Tinh bột chỉ gồm glucose nên là PS thuần.'],
+['Acid hyaluronic là PS tạp.',true,'Gồm N-acetylglucosamine và acid glucuronic xen kẽ.'],
+['Tinh bột + iod cho màu đỏ.',false,'Tinh bột cho màu xanh. Glycogen và dextrin mới cho màu đỏ.'],
+['Oxy hóa C6 của glucose tạo acid glucuronic, có vai trò khử độc.',true,'Đúng, glucuronic gắn vào chất độc để thải ra ngoài.'],
+['Khử glucose cho ra sorbitol.',true,'Khử nhóm aldehyd thành rượu, thu được sorbitol (glucitol).']
+],fb:[
+['Lactose gồm glucose và ___.',['galactose'],'Lactose = glucose + galactose.'],
+['Sacarose gồm glucose và ___.',['fructose'],'Sacarose = glucose + fructose.'],
+['Glycogen cho màu ___ với iod.',['đỏ','do'],'Tinh bột xanh, glycogen và dextrin đỏ.'],
+['Oxy hóa C6 của glucose tạo acid ___.',['glucuronic'],'C1 thành gluconic, C6 thành glucuronic.'],
+['Fructose thuộc nhóm đường ___ (aldose hay cetose).',['cetose','ketose'],'Fructose có nhóm ceton.']
+]},
+{n:'Nhìn hình – Đồng phân',e:'🔍',mc:[
+['Hình này là:',['D-glucose','D-galactose','D-mannose','L-glucose'],0,'D-glucose đọc OH từ trên xuống: phải – trái – phải – phải.','F:RLRR'],
+['Hình này là:',['D-glucose','D-galactose','D-mannose','L-glucose'],3,'Mọi OH đều đảo bên so với D-glucose nên là L-glucose.','F:LRLL'],
+['Hình này là:',['D-glucose','D-galactose','D-mannose','L-glucose'],1,'Chỉ khác D-glucose ở OH của C4 (nằm bên trái).','F:RLLR'],
+['Hình này là:',['D-glucose','D-galactose','D-mannose','L-glucose'],2,'Chỉ khác D-glucose ở C2 (OH nằm bên trái).','F:LLRR'],
+['Hình này thuộc dãy nào?',['Dãy D','Dãy L'],0,'OH ở C xa nhóm CHO nhất (C5) nằm bên phải nên là dãy D.','F:RLLR'],
+['Hình này là:',['α-D-glucopyranose','β-D-glucopyranose','α-D-galactopyranose','α-D-mannopyranose'],0,'OH ở C1 hướng xuống là α. C2 xuống, C3 lên, C4 xuống là glucose.','H:ddud'],
+['Hình này là:',['α-D-glucopyranose','β-D-glucopyranose','α-D-galactopyranose','α-D-mannopyranose'],1,'OH ở C1 hướng lên là β.','H:udud'],
+['Hình này là:',['α-D-glucopyranose','β-D-glucopyranose','α-D-galactopyranose','α-D-mannopyranose'],2,'C4 hướng lên (khác glucose) là galactose.','H:dduu'],
+['Hình này là:',['α-D-glucopyranose','β-D-glucopyranose','α-D-galactopyranose','α-D-mannopyranose'],3,'C2 hướng lên (khác glucose) là mannose.','H:duud']
+],tf:[
+['Hình là D-galactose.',false,'Đây là D-glucose (phải – trái – phải – phải).','F:RLRR'],
+['Hình là β-D-glucopyranose.',true,'OH ở C1 hướng lên là β.','H:udud'],
+['Hình là α-D-glucopyranose.',false,'OH ở C1 hướng lên nên là β.','H:udud'],
+['Hình là đường dãy L.',true,'OH ở C xa carbonyl nhất nằm bên trái nên là dãy L.','F:LRLL']
+],fb:[
+['Glucose và galactose khác nhau ở OH của carbon số ___.',['4'],'Galactose đảo OH ở C4.'],
+['Glucose và mannose khác nhau ở OH của carbon số ___.',['2'],'Mannose đảo OH ở C2.']
+]}
+];
+const EXP=[
+{mc:["Saccharose = đường mía/đường ăn hằng ngày = glucose + fructose. Mẹo: Sac-charose ~ 'Sugar' mía.","Lactose = đường SỮA = glucose + galactose. Mẹo: 'Lac' trong tiếng Latin là sữa.","RNA chứa đường ribose. Mẹo: R trong RNA = R trong Ribose.","DNA chứa deoxyribose (ribose bị mất 1 oxy ở C2'). Mẹo: D trong DNA = D trong Deoxy.","Tinh bột gồm rất nhiều glucose nối lại nên là polysaccharide (PS). MS = mono (1 đường), DS = di (2), TS = tri (3).","Cellulose tạo thành tế bào thực vật nên là carbohydrate nhiều nhất trên Trái Đất. Tinh bột và glycogen chỉ là dạng dự trữ.","Đường phân: dùng 2 ATP, tạo 4 ATP, nên lãi ròng 2 ATP. Kỵ khí chỉ có bước này nên chỉ 2 ATP. Hiếu khí mới ra khoảng 30 ATP.","N-acetylneuraminic acid chính là tên khác của sialic acid, thường nằm ở đầu chuỗi đường trên bề mặt tế bào.","Hyaluronic acid chứa N-acetylglucosamine. Chondroitin sulfat dùng N-acetylgalactosamine, heparin là chất chống đông, warfarin chỉ là thuốc (không phải đường).","Hyaluronic acid lặp lại 2 đơn vị: N-acetylglucosamine + D-glucuronic acid. Chọn đáp án có 'glucosamine' (không phải galactosamine) và glucuronic.","Dịch khớp nhớt và trơn nhờ hyaluronic acid, giúp bôi trơn khớp.",""],
+tf:["Saccharose = glucose + fructose, đúng.","","Tinh bột gồm nhiều đơn vị glucose, là polysaccharide.","Lactose là đường của sữa (glucose + galactose).","Cellulose ở thành tế bào thực vật, là chất hữu cơ phổ biến nhất.","","Dịch khớp nhớt nhờ hyaluronic acid.",""],
+fb:["Glucose + fructose = saccharose.","RNA có ribose.","DNA có deoxyribose.","Đường sữa là lactose.","N-acetylneuraminic acid = sialic acid.","Hyaluronic acid = N-acetylglucosamine + D-glucuronic acid."]},
+{mc:["Protein nào cũng làm từ các amino acid KHÁC NHAU (trong 20 loại), nối với nhau theo thứ tự riêng. Nên không thể 'như nhau' hay 'chỉ một vài'.","Cơ thể người chỉ dùng dạng L-α-amino acid để làm protein. Dạng D rất hiếm.","Chỉ cysteine, cystine và methionine có nguyên tử lưu huỳnh (S). Threonine có nhóm OH, không có S. Mẹo: S ở 'Cys' và 'Met'.","Glycine có chuỗi bên chỉ là H, không có carbon bất đối nên không quang hoạt. Các amino acid còn lại đều có.","Ở pH trung hòa, nhóm COO- (âm) và NH3+ (dương) cùng tồn tại, cộng lại trung hòa: gọi là ion lưỡng cực.","Mọi amino acid đều có khung chung gồm nhóm COOH (thành âm) và NH2 (thành dương). Chuỗi bên thì chỉ một vài loại mới tích điện.","Glutathione = Glu + Cys + Gly (3 amino acid). Oxytocin có 9, kallidin 10, anserine chỉ 2.","Histamin được tạo ra khi histidine bị cắt nhóm COOH (decarboxylation). Mẹo: HISTamin từ HISTidine.","Chromoprotein là protein có nhóm mang màu. Hemoglobin có heme màu đỏ. Gliadin là protein đơn giản, nuclein không phải protein màu.","Ribosome là nơi lắp ráp các amino acid thành protein. Ty thể làm năng lượng, hạt nhân giữ DNA."],
+tf:["Protein người chỉ dùng L-α-amino acid.","Cysteine và methionine chứa S.","Threonine không có S (nó có nhóm OH).","Glycine không quang hoạt vì không có carbon bất đối.","Glutathione gồm Glu-Cys-Gly, đúng 3 amino acid.","Histidine mất nhóm COOH thành histamin.","Heme màu đỏ nên hemoglobin là chromoprotein.","Ribosome tổng hợp protein."],
+fb:["HISTamin từ HISTidine.","Chuỗi bên là H, không có carbon bất đối.","Ion lưỡng cực (zwitterion) vừa có điện tích dương vừa có âm.","Chromo = màu. Chromoprotein = protein có màu.","Ribosome lắp ráp protein."]},
+{mc:["HDL là cholesterol 'tốt': thu cholesterol thừa ở mô về gan để thải đi.","LDL đưa cholesterol đến mô, dễ gây xơ vữa. HDL làm ngược lại (đưa về gan), nên bảo vệ mạch máu.","LDL chứa nhiều cholesterol nhất (khoảng một nửa thành phần). VLDL, CM nhiều triglyceride hơn.",""],
+tf:["HDL mang cholesterol từ ngoại biên về gan.","HDL chống xơ vữa, ngược với LDL.","LDL chứa nhiều cholesterol nhất.","1 g lipid cho khoảng 9 kcal, còn glucid hoặc protein chỉ khoảng 4 kcal."],
+fb:["HDL = cholesterol tốt, đưa về gan.","LDL nhiều cholesterol nhất.","Lipid 9 kcal/g, nhiều hơn glucid và protein."]},
+{mc:["Gây mê, sợ hãi, căng thẳng làm tăng adrenalin nên đường huyết TĂNG. Addison thiếu cortisol nên đường huyết giảm. Câu này mơ hồ vì rượu cũng làm giảm đường huyết, hãy đối chiếu đáp án thầy cô.","Albumin do gan sản xuất. Thận hư làm mất albumin qua nước tiểu, suy gan thì không sản xuất được, ung thư giai đoạn cuối thì suy kiệt. Cả ba đều làm albumin giảm.","Protein niệu có thể do màng lọc cầu thận thủng, ống thận không hấp thu lại được, hoặc protein trong máu quá nhiều. Nên chọn tất cả.","Na+ là chất BÌNH THƯỜNG trong nước tiểu, không phải chất bất thường. Lưu ý: dòng 'sắc tố mật = muối mật' cũng có vẻ sai về chữ, hãy đối chiếu đáp án thầy cô.","Natri (cùng các anion đi kèm) chiếm phần lớn áp suất thẩm thấu của huyết tương.","Ba chất chính tính độ thẩm thấu: natri, ure và glucose. Creatinin, protein chiếm rất ít.","Điện giải là các hạt nhỏ hòa tan nên tạo ÁP SUẤT THẨM THẤU, giúp nước di chuyển. Áp suất keo thì do protein (albumin).","Thận hỏng thì không thải ure ra nước tiểu: ure ứ lại trong máu (tăng), nước tiểu thì ít ure (giảm).","Creatinin máu tăng khi thận lọc kém, nên là xét nghiệm đánh giá thận phổ biến nhất.","Sữa thiếu vitamin C (nên trẻ bú sữa bò đun sôi lâu cần bổ sung nước cam, rau quả)."],
+tf:["Natri chiếm phần lớn áp suất thẩm thấu.","Điện giải là các hạt nhỏ tạo áp suất thẩm thấu giữ nước.","Thận lọc kém: ure ứ lại trong máu, ra nước tiểu ít.","Creatinin máu tăng khi thận suy.","Na+ là thành phần bình thường trong nước tiểu.","Sữa thiếu vitamin C.","Albumin do gan sản xuất, suy gan nặng thì giảm."],
+fb:["Natri chiếm phần lớn áp suất thẩm thấu.","Creatinin máu đánh giá chức năng thận.","Ure ứ trong máu nghĩa là thận không thải được.","Sữa thiếu vitamin C."]}
+];
+D[1].cl=[['Về amino acid:',[['Glycine không có tính quang hoạt.',1,'Glycine có R = H nên không có C bất đối.'],['Cysteine chứa lưu huỳnh.',1,'Cysteine, cystine, methionine đều có S.'],['Protein người chứa cả L và D-amino acid như nhau.',0,'Chỉ có L-α-amino acid.'],['Ở pH trung hòa, amino acid chủ yếu là ion lưỡng cực.',1,'COO- và NH3+ cùng tồn tại.']]]];
+D[2].cl=[['Về lipoprotein và năng lượng:',[['HDL đưa cholesterol về gan.',1,'HDL là cholesterol tốt.'],['LDL chứa nhiều cholesterol nhất.',1,''],['HDL thúc đẩy xơ vữa động mạch.',0,'HDL chống xơ vữa, ngược với LDL.'],['Lipid cho nhiều năng lượng hơn glucid.',1,'9 so với 4 kcal/g.']]]];
+D[3].cl=[['Bệnh nhân có ure máu tăng, ure niệu giảm:',[['Gợi ý suy chức năng thận.',1,'Thận không thải được ure.'],['Creatinin máu có thể tăng.',1,'Creatinin cũng ứ lại khi thận lọc kém.'],['Gợi ý suy chức năng gan.',0,'Gan tổng hợp ure, suy gan thì ure máu thường không tăng.'],['Na+ là chất bất thường trong nước tiểu.',0,'Na+ là thành phần bình thường.']]],['Về albumin:',[['Do gan tổng hợp.',1,''],['Giảm trong hội chứng thận hư.',1,'Mất albumin qua nước tiểu.'],['Giảm rõ rệt trong suy gan giai đoạn cuối.',1,'Gan không sản xuất được.'],['Albumin tạo áp suất thẩm thấu của các ion.',0,'Albumin tạo áp suất keo. Áp suất thẩm thấu do điện giải.']]]];
+D[4].cl=[['Về các bào quan:',[['Ty thể có màng đôi.',1,''],['Lysosom chứa nhiều hydrolase.',1,''],['Ribosome có màng đơn.',0,'Ribosome không có màng.'],['Peroxisom có catalase phân giải H₂O₂.',1,'']]],['Về nguyên tố sinh học:',[['O, C, H, N là 4 nguyên tố cơ bản.',1,''],['Zn, Fe, Cu là nguyên tố đa lượng.',0,'Đây là vi lượng.'],['Vi lượng có vai trò hoạt hóa hoặc ức chế enzym.',1,''],['Ở cơ thể người, H chiếm tỉ lệ nguyên tử cao nhất.',1,'H 53%, O 25.5%, C 9.5%.']]]];
+D[4].fb.push(['Chất xúc tác sinh học gồm enzym, vitamin và ___.',['hormon','hormone'],'Enzym, vitamin, hormon là ba chất xúc tác sinh học.']);
+D[5].cl=[['Về các đường đôi:',[['Maltose gồm hai glucose nối α-1,4.',1,''],['Lactose gồm glucose và fructose.',0,'Lactose = glucose + galactose.'],['Sacarose không có tính khử.',1,'Hai carbon bán acetal đã dùng để nối nhau.'],['Lactose có trong nước tiểu phụ nữ trước và sau sinh.',1,'Đúng theo slide.']]],['Về tính chất của glucose:',[['Bị oxy hóa ở C6 tạo acid glucuronic.',1,''],['Khử bằng H tạo sorbitol.',1,''],['Cho phản ứng Fehling dương tính (đỏ gạch).',1,'Vì có tính khử.'],['Cho màu xanh với iod.',0,'Chỉ tinh bột cho màu xanh.']]],['Về polysaccharid:',[['Glycogen cho màu đỏ với iod.',1,''],['Cellulose nối bằng β-1,4.',1,'Tinh bột nối α-1,4.'],['Heparin là PS thuần.',0,'Heparin là PS tạp.'],['Inulin, dextrin là PS thuần.',1,'Slide liệt kê cùng nhóm với tinh bột, glycogen, cellulose.']]]];
+D[5].fb.push(['Test ___ phân biệt fructose (đỏ cam) với glucose.',['seliwanoff'],'Fructose là cetose nên cho màu với Seliwanoff.'],['Phản ứng ___ cho màu tím đỏ, nhận biết glucid nói chung.',['molisch'],'Acid mạnh tạo furfural rồi kết hợp phenol.'],['Phản ứng tạo tinh thể đặc thù mỗi đường gọi là tạo ___.',['osazon'],'Mỗi đường cho tinh thể osazon khác nhau.'],['Maltose nối bằng liên kết ___-1,4 glucosid (α hay β).',['α','alpha','a'],'Maltose α-1,4. Lactose β-1,4.']);
+D[5].tf.push(['Galactose là epimer của glucose ở C4.',true,'Đúng.'],['Fructose cho màu đỏ cam với Seliwanoff.',true,'Fructose là cetose.'],['Test Molisch chỉ nhận biết được fructose.',false,'Molisch nhận biết glucid nói chung.'],['Sacarose cho màu đỏ gạch đậm với test Barfoed.',false,'Sacarose không màu. MS đỏ gạch đậm sau 5-7 phút, DS đỏ gạch lợt sau 10-15 phút.']);
+D[6].notes=1;
+D[6].fb.push(['Tên chất trong hình (vd D-glucose): ___',['D-glucose'],'Phải – trái – phải – phải = D-glucose.','F:RLRR'],['Tên chất trong hình: ___',['D-galactose'],'C4 đảo sang trái nên là galactose.','F:RLLR'],['Tên chất trong hình: ___',['D-mannose'],'C2 đảo sang trái nên là mannose.','F:LLRR'],['Tên chất trong hình: ___',['L-glucose'],'Mọi OH đảo so với D-glucose nên là L-glucose.','F:LRLL'],['Hình thuộc dãy ___ (D hay L)?',['d'],'OH ở C5 bên phải nên là D.','F:RLLR'],['Tên chất (viết α hay β): ___',['α-D-glucopyranose','a-D-glucopyranose'],'C1 xuống = α; C2 xuống, C3 lên, C4 xuống = glucose.','H:ddud'],['Tên chất (viết α hay β): ___',['β-D-glucopyranose','b-D-glucopyranose'],'C1 lên = β.','H:udud'],['Tên chất (viết α hay β): ___',['α-D-galactopyranose','a-D-galactopyranose'],'C4 lên nên là galactose.','H:dduu'],['Tên chất (viết α hay β): ___',['α-D-mannopyranose','a-D-mannopyranose'],'C2 lên nên là mannose.','H:duud']);
+D[6].cl=[['Cho hình công thức thẳng sau:',[['Đây là D-glucose.',1,'Phải – trái – phải – phải.'],['Đây là đường dãy L.',0,'OH ở C xa carbonyl nhất bên phải nên là D.'],['Đảo OH ở C4 sang trái sẽ được galactose.',1,'Galactose là epimer ở C4.'],['Đảo OH ở C2 sang trái sẽ được galactose.',0,'Đảo ở C2 sẽ được mannose.']],'F:RLRR'],['Cho hình công thức vòng sau:',[['Đây là α-D-glucopyranose.',1,'OH ở C1 xuống là α.'],['OH ở C1 xuống nên là dạng β.',0,'Xuống là α, lên là β.'],['Đổi OH ở C4 lên trên sẽ thành galactose.',1,'C4 đảo = galactose.'],['Đây là vòng 5 cạnh (furanose).',0,'Vòng 6 cạnh là pyranose.']],'H:ddud']];
+const N=s=>String(s).toLowerCase().replace(/α/g,'alpha').replace(/β/g,'beta').replace(/[\s\-–.,()]/g,'');
+function renderCL(q){$('desc').textContent='Mỗi ý a, b, c, d chọn Đúng hoặc Sai.';
+$('list').innerHTML=q.map((c,i)=>`<div class="q"><h3><span>${i+1}.</span>${c[0]}</h3>${c[2]?fig(c[2]):''}${c[1].map((s,j)=>`<div class="st" data-i="${i}" data-j="${j}"><div>${'abcd'[j]}) ${s[0]}</div><div class="row"><button class="opt" data-v="1">Đúng</button><button class="opt" data-v="0">Sai</button></div><div class="fb"></div></div>`).join('')}</div>`).join('');
+document.querySelectorAll('.st').forEach(el=>{const s=q[el.dataset.i][1][el.dataset.j];el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(el.dataset.d)return;el.dataset.d=1;const v=+b.dataset.v,c=s[1]?1:0;el.querySelectorAll('.opt').forEach(o=>{const k=+o.dataset.v;o.classList.add(k==c?'ok':k==v?'no':'dim')});mark(el,v==c,(v==c?'✅ ':'❌ ')+(s[2]?'<br>💡 '+s[2]:''))})});upd();window.scrollTo({top:0})}
+{const e=document.getElementById('nt');try{e.value=localStorage.getItem('nt')||''}catch(_){}e.oninput=()=>{try{localStorage.setItem('nt',e.value)}catch(_){}}}
+D[6].guide=document.getElementById('gd').innerHTML;
+D.push({n:'Nhìn hình – Amino acid',e:'🧬',notes:1,guide:'Gợi ý: <b>1)</b> Đặt COOH ở trên, R ở dưới. <b>2)</b> NH₂ bên trái = dãy L, bên phải = dãy D (protein người chỉ có L). <b>3)</b> Nhìn nhóm R để gọi tên: H = glycine, CH₃ = alanine, CH₂OH = serine, CH₂SH = cysteine (có S). <b>4)</b> Hai bên đều là H (glycine) thì không có C bất đối, không quang hoạt. <b>5)</b> Có NH₃⁺ và COO⁻ cùng lúc = ion lưỡng cực.',
+mc:[
+['Hình này là:',['L-alanine','D-alanine','Glycine','L-serine'],0,'COOH ở trên, NH₂ bên trái là dãy L; R = CH₃ là alanine.','A:L:Ala'],
+['Hình này là:',['L-alanine','D-alanine','Glycine','L-serine'],1,'NH₂ bên phải là dãy D.','A:D:Ala'],
+['Hình này là:',['L-alanine','D-alanine','Glycine','L-serine'],2,'Cả hai bên đều là H, không có carbon bất đối nên không quang hoạt.','A:L:Gly'],
+['Hình này là:',['L-alanine','D-alanine','Glycine','L-serine'],3,'R = CH₂OH là serine, NH₂ bên trái là L.','A:L:Ser'],
+['Hình này thuộc dãy nào?',['Dãy L','Dãy D'],0,'NH₂ bên trái = L. Protein người chỉ gồm L-α-amino acid.','A:L:Val'],
+['Amino acid chứa lưu huỳnh trong hình là:',['Cysteine','Serine','Alanine','Valine'],0,'R = CH₂SH có nguyên tử S.','A:L:Cys'],
+['Dạng alanine ở pH trung hòa này gọi là:',['Ion lưỡng cực','Phân tử không điện','Cation','Anion'],0,'Có cả NH₃⁺ và COO⁻, tổng điện tích bằng 0.','A:L:Ala:z'],
+['Hình này là:',['L-phenylalanine','D-phenylalanine','Glycine','L-alanine'],0,'R là CH₂ gắn vòng benzen; NH₂ bên trái là L.','A:L:Phe']
+],tf:[
+['Hình là amino acid dãy D.',false,'NH₂ bên trái là dãy L.','A:L:Ala'],
+['Hình là glycine, không quang hoạt.',true,'Hai bên đều là H.','A:L:Gly'],
+['Carbon α của hình này là carbon bất đối.',false,'Glycine có 2 H nên không bất đối.','A:L:Gly'],
+['Protein người chủ yếu gồm amino acid dạng như hình.',true,'Đúng, chỉ L-α-amino acid.','A:L:Ser']
+],fb:[
+['Tên amino acid trong hình (vd L-alanine): ___',['L-alanine'],'NH₂ trái = L; R = CH₃ = alanine.','A:L:Ala'],
+['Tên amino acid trong hình: ___',['D-alanine'],'NH₂ phải = D.','A:D:Ala'],
+['Tên amino acid trong hình: ___',['glycine','gly'],'R = H, không quang hoạt.','A:L:Gly'],
+['Tên amino acid trong hình: ___',['L-serine'],'R = CH₂OH.','A:L:Ser'],
+['Tên amino acid trong hình: ___',['L-cysteine'],'R = CH₂SH có S.','A:L:Cys'],
+['Hình thuộc dãy ___ (D hay L)?',['d'],'NH₂ bên phải = D.','A:D:Ser']
+],cl:[
+['Cho hình amino acid sau:',[['Đây là L-alanine.',1,'NH₂ trái, R = CH₃.'],['Đây là dãy D.',0,'NH₂ bên trái là dãy L.'],['Có carbon bất đối.',1,'4 nhóm khác nhau: NH₂, H, COOH, CH₃.'],['Chứa lưu huỳnh.',0,'R = CH₃ không có S.']],'A:L:Ala'],
+['Cho hình amino acid sau:',[['Đây là glycine.',1,'R = H.'],['Có tính quang hoạt.',0,'Không có C bất đối.'],['Nhóm R chỉ là một nguyên tử H.',1,''],['Thuộc dãy L.',0,'Glycine không có dãy D hay L vì không bất đối.']],'A:L:Gly']
+]});
+D[0].mc.push(
+['🟡 Saccharose không có tính khử vì:',['Hai carbon bán acetal (C1 glucose, C2 fructose) đã nối với nhau nên không còn nhóm khử tự do','Không có glucose','Không tan trong nước','Có vòng 6 cạnh'],0,'Tính khử cần một đầu bán acetal tự do (mở được thành aldehyd/ceton). Maltose, lactose còn một đầu tự do nên khử được.'],
+['🟡 Cellulose và tinh bột đều gồm glucose, khác nhau ở:',['Kiểu liên kết (β-1,4 và α-1,4)','Loại đường','Số carbon','Có hay không có nitơ'],0,'Cùng một đơn vị glucose nhưng đổi kiểu nối thì tính chất khác hẳn: người có enzym cắt α-1,4 nên tiêu hóa được tinh bột.'],
+['🔴 Đường phân kỵ khí lãi 2 ATP, hiếu khí cho khoảng 30 ATP. Sự khác biệt chính là:',['Hiếu khí đi tiếp qua chu trình acid citric và chuỗi hô hấp ở ty thể','Hiếu khí có thêm glucose','Kỵ khí không có enzym','Kỵ khí dùng lipid'],0,'Đường phân chỉ là bước đầu. Có oxy thì sản phẩm đi tiếp vào ty thể để oxy hóa hoàn toàn nên thu nhiều ATP hơn rất nhiều.']);
+D[1].mc.push(
+['🟢 Khung chung của một amino acid gồm:',['NH₂, COOH, H và nhóm R cùng gắn vào carbon α','Chỉ nhóm COOH','Hai nhóm NH₂','Vòng đường'],0,'20 amino acid giống nhau ở khung này, chỉ khác nhau ở nhóm R.'],
+['🟢 Liên kết nối các amino acid thành peptide là:',['Liên kết peptid (CO–NH)','Liên kết glycosid','Liên kết ester','Liên kết hydro'],0,'COOH của amino acid này nối với NH₂ của amino acid kia, mất đi một phân tử nước.'],
+['🟡 Một tripeptide có bao nhiêu liên kết peptid?',['2','3','1','4'],0,'n amino acid thì có n − 1 liên kết peptid.'],
+['🟡 Vì sao glycine không quang hoạt còn alanine thì có?',['Carbon α của glycine có hai nguyên tử H giống nhau nên không bất đối','Glycine không có NH₂','Alanine không có H','Glycine quá nhỏ'],0,'Quang hoạt cần carbon gắn 4 nhóm khác nhau. Glycine có R = H nên chỉ có 3 nhóm khác nhau.'],
+['🟡 Ở pH trung hòa amino acid là ion lưỡng cực vì:',['COOH nhường H⁺ thành COO⁻, NH₂ nhận H⁺ thành NH₃⁺','Chỉ NH₂ mất H','Chỉ COOH nhận H','Không có nhóm tích điện'],0,'Một đầu âm, một đầu dương, tổng điện tích bằng 0.'],
+['🔴 Histamin tạo từ histidine nhờ phản ứng:',['Khử carboxyl (mất CO₂)','Oxy hóa','Thêm nhóm phosphat','Thủy phân'],0,'Decarboxylation là cắt bỏ nhóm COOH dưới dạng CO₂ để thành amin.'],
+['🔴 Glutathione (Glu–Cys–Gly) chứa lưu huỳnh là nhờ gốc:',['Cysteine','Glutamate','Glycine','Không chứa S'],0,'Trong ba gốc chỉ cysteine có nhóm SH.']);
+D[2].mc.push(
+['🟢 Lipoprotein nào đưa cholesterol đến các mô?',['LDL','HDL','Không có','Cả hai như nhau'],0,'LDL đưa cholesterol đến mô, HDL thu hồi về gan.'],
+['🟡 Vì sao LDL cao dễ gây xơ vữa còn HDL cao thì bảo vệ?',['LDL đưa cholesterol vào thành mạch, HDL kéo cholesterol ra khỏi mô về gan','LDL chứa nhiều protein','HDL không chứa cholesterol','LDL tan trong nước'],0,'Hai loại làm việc ngược chiều nhau, nên vai trò cũng ngược nhau.'],
+['🟡 1 g lipid so với 1 g glucid cho năng lượng:',['Gấp hơn hai lần (9 so với 4 kcal)','Bằng nhau','Ít hơn','Gấp mười lần'],0,'Lipid có nhiều carbon đã khử hơn nên oxy hóa cho nhiều năng lượng.'],
+['🔴 Một người có HDL thấp, LDL cao. Nguy cơ lớn nhất là:',['Xơ vữa động mạch','Thiếu máu','Hạ đường huyết','Thiếu vitamin C'],0,'LDL đưa cholesterol vào thành mạch mà HDL lại ít để dọn ra.']);
+D[3].mc.push(
+['🟢 Áp suất thẩm thấu của huyết tương chủ yếu do:',['Các chất tan nhỏ như Na⁺, ure, glucose','Albumin','Lipid','Tế bào máu'],0,'Áp suất thẩm thấu phụ thuộc số hạt hòa tan; chất tan nhỏ có số hạt lớn.'],
+['🟡 Albumin giữ nước trong lòng mạch nhờ áp suất:',['Keo','Thẩm thấu của ion','Thủy tĩnh','Khí quyển'],0,'Protein lớn tạo áp suất keo. Albumin giảm thì nước dễ thoát ra ngoài mạch (gây phù).'],
+['🟡 Vì sao hội chứng thận hư làm albumin máu giảm?',['Màng lọc cầu thận tổn thương, albumin mất qua nước tiểu','Gan ngừng hoạt động','Thận tạo albumin','Albumin bị phân hủy ở phổi'],0,'Albumin đáng lẽ ở lại trong máu nhưng bị rò ra nước tiểu.'],
+['🟡 Vì sao suy gan nặng làm albumin giảm?',['Gan là nơi tổng hợp albumin','Gan thải albumin','Gan tạo ure nên albumin giảm','Do thiếu Na'],0,'Hai bệnh làm giảm albumin theo hai cách khác nhau: thận hư thì mất, suy gan thì không tạo ra.'],
+['🔴 Ure máu tăng, ure niệu giảm, creatinin máu tăng. Kết luận hợp lý nhất:',['Chức năng lọc của thận suy giảm','Suy giáp','Thiếu vitamin C','Tăng đường huyết'],0,'Cả ure và creatinin đều ứ lại trong máu khi thận không thải được.'],
+['🔴 Natri ảnh hưởng nhiều nhất đến độ thẩm thấu vì:',['Là cation chính của dịch ngoại bào, cùng anion đi kèm chiếm phần lớn số hạt','Phân tử rất lớn','Không tan','Chỉ có trong nước tiểu'],0,'Áp suất thẩm thấu tính theo số hạt, không phải kích thước hạt.']);
+D[4].mc.push(
+['🟢 Nguyên tố vi lượng rất ít nhưng không thể thiếu vì:',['Chúng hoạt hóa hoặc ức chế enzym, tham gia tạo máu...','Chúng tạo khung tế bào','Chúng là nguồn năng lượng chính','Chúng là nước'],0,'Vai trò không ở số lượng mà ở chức năng điều hòa.'],
+['🟡 Khác biệt cốt lõi giữa tự dưỡng và dị dưỡng là:',['Nguồn năng lượng và nguồn chất: tự dưỡng dùng ánh sáng và chất vô cơ, dị dưỡng ăn chất hữu cơ có sẵn','Dị dưỡng có nhân','Tự dưỡng không có DNA','Dị dưỡng tự quang hợp'],0,'Sinh vật dị dưỡng lấy năng lượng hóa học từ thức ăn do sinh vật tự dưỡng làm ra.'],
+['🟡 Thứ tự các mức tổ chức từ nhỏ đến lớn là:',['Đơn vị cấu tạo → đại phân tử → bào quan → tế bào → cơ thể','Tế bào → đơn vị cấu tạo → cơ thể','Cơ thể → tế bào → bào quan','Bào quan → đơn vị cấu tạo → đại phân tử'],0,'Ví dụ: acid amin → protein → ribosome → tế bào → cơ thể.'],
+['🟡 Enzym và hormon khác nhau ở chỗ:',['Enzym do mọi tế bào làm ra để xúc tác; hormon do tuyến chuyên biệt tiết để điều hòa','Enzym là lipid','Hormon xúc tác phản ứng','Hormon do mọi tế bào làm ra'],0,'Một bên là công cụ xúc tác, một bên là tín hiệu điều hòa.'],
+['🔴 Tế bào mất lysosom sẽ gặp khó khăn rõ nhất gì?',['Không phân giải được nhiều chất cần thủy phân','Không tổng hợp được protein','Không có màng','Không có DNA'],0,'Lysosom chứa nhiều hydrolase để phân giải chất.'],
+['🔴 Tế bào đang tổng hợp rất nhiều protein thì sẽ có nhiều:',['Ribosome','Lysosom','Peroxisom','Không cần bào quan'],0,'Ribosome là nơi lắp ráp protein.']);
+D[5].mc.push(
+['🟢 Phân biệt PS thuần và PS tạp dựa vào:',['PS thuần chỉ một loại đường; PS tạp gồm nhiều loại đường hoặc dẫn xuất','Kích thước','Màu','Có iod hay không'],0,'Tinh bột, glycogen, cellulose: chỉ glucose. Hyaluronic, heparin: nhiều loại đường và dẫn xuất.'],
+['🟢 Liên kết glycosid hình thành giữa:',['OH bán acetal của một đường và OH (hoặc NH₂) của chất khác','Hai nhóm COOH','Hai nhóm NH₂','Hai nhóm CH₃'],0,'Liên kết này cũng là liên kết nối các đường lại thành đường đôi và đường đa.'],
+['🟡 Vì sao đường có tính khử?',['Có nhóm aldehyd hoặc ceton khử được Cu²⁺','Có vòng benzen','Có nitơ','Có lưu huỳnh'],0,'Nhóm chức khử nhường electron cho Cu²⁺ nên tạo Cu₂O đỏ gạch.'],
+['🟡 Phản ứng Molisch dựa trên cơ sở:',['Acid mạnh làm mất nước đường tạo furfural, rồi kết hợp phenol thành màu','Đường bị khử','Đường bị oxy hóa thành CO₂','Tạo tinh thể'],0,'Vì mọi glucid đều cho furfural nên Molisch nhận biết glucid nói chung.'],
+['🟡 Vì sao lactose, maltose có tính khử còn sacarose thì không?',['Sacarose dùng cả hai carbon bán acetal để nối nhau; lactose, maltose còn một carbon bán acetal tự do','Sacarose không có glucose','Sacarose quá nhỏ','Lactose có nhiều OH hơn'],0,'Có đầu bán acetal tự do thì mở vòng được, lộ ra nhóm aldehyd khử.'],
+['🟡 Chuyển từ α-D-glucose sang β-D-glucose chỉ thay đổi:',['Vị trí OH ở C1 (xuống thành lên)','Vị trí OH ở C4','Số carbon','Loại đường'],0,'α và β chỉ khác nhau ở OH của carbon bán acetal C1.'],
+['🔴 Mẫu cho đỏ cam với Seliwanoff và khử Fehling dương tính. Chất này nhiều khả năng là:',['Fructose','Tinh bột','Glycogen','Cellulose'],0,'Seliwanoff đỏ cam là đặc trưng của cetose; fructose lại có tính khử.'],
+['🔴 Mẫu có Molisch dương tính, iod cho màu đỏ. Chất đó là:',['Glycogen (hoặc dextrin)','Tinh bột','Glucose','Cellulose'],0,'Molisch: là glucid. Iod đỏ: glycogen, dextrin. Iod xanh mới là tinh bột.'],
+['🔴 Molisch (+), iod không màu, Barfoed đỏ gạch đậm sau 5-7 phút. Chất là:',['Monosaccharid','Disaccharid','Tinh bột','Glycogen'],0,'Theo sơ đồ slide: iod không màu là MS/DS; đỏ gạch đậm nhanh (5-7 phút) là MS, DS mới chậm (10-15 phút).']);
+D[6].mc.push(
+['🟢 Để biết hình Fischer thuộc dãy D hay L ta nhìn:',['OH của carbon xa nhóm CHO nhất','OH ở C1','Nhóm CH₂OH','Số carbon'],0,'Bên phải là D, bên trái là L.'],
+['🟡 Hai đường chỉ khác nhau OH ở một carbon duy nhất (không phải C1) gọi là:',['Epimer','Polymer','Enantiomer','Isotope'],0,'Glucose và galactose là epimer ở C4; glucose và mannose ở C2.'],
+['🟡 α-glucose và β-glucose (cùng dãy D) khác nhau ở:',['OH ở carbon C1 (bán acetal)','OH ở C4','Số carbon','Nhóm CHO'],0,'Chỉ khác C1 thì α và β là hai dạng của cùng một đường và chuyển qua lại được.'],
+['🔴 Đảo cả 4 OH ở C2 đến C5 của D-glucose thì được:',['L-glucose','D-galactose','D-mannose','D-fructose'],0,'Đảo toàn bộ là ảnh gương, tức L-glucose. Đảo một carbon mới ra đường khác.'],
+['🔴 Hình này là:',['α-D-mannopyranose','α-D-glucopyranose','β-D-glucopyranose','α-D-galactopyranose'],0,'C1 xuống là α; C2 lên (khác glucose) là mannose.','H:duud'],
+['🔴 Hình này là:',['β-D-galactopyranose','β-D-glucopyranose','α-D-galactopyranose','β-D-mannopyranose'],0,'C1 lên là β; C4 lên (khác glucose) là galactose.','H:uduu']);
+D[7].mc.push(
+['🟡 Vì sao hình này không có dãy D hay L dù có carbon α?',['Carbon α gắn hai nguyên tử H giống nhau nên không bất đối','Vì không có NH₂','Vì không có COOH','Vì quá lớn'],0,'Glycine là amino acid duy nhất trong 20 loại không có carbon α bất đối.','A:L:Gly'],
+['🔴 Dạng amino acid này hiếm gặp trong protein người vì:',['Protein người chỉ dùng L-amino acid','D-amino acid luôn độc','Không tồn tại','Không có nhóm R'],0,'NH₂ bên phải là dãy D; riêng dãy L mới được dùng để xây protein.','A:D:Ala'],
+['🔴 Cysteine khác serine ở nguyên tử:',['S (cysteine) thay cho O (serine)','N','Cl','P'],0,'Serine là CH₂OH, cysteine là CH₂SH.','A:L:Cys'],
+['🔴 Dạng ion lưỡng cực này khi thêm acid mạnh (H⁺) thì nhóm nào nhận H⁺?',['COO⁻ thành COOH','NH₃⁺ thành NH₄²⁺','CH₃','H'],0,'Thêm acid thì đầu âm COO⁻ nhận H⁺, amino acid mang điện dương.','A:L:Ala:z']);
+D[0].mc.length=12;D[1].mc.length=10;D[2].mc.length=4;D[3].mc.length=10;D[4].mc.length=14;D[5].mc.length=13;D[6].mc.length=9;D[7].mc.length=8;
+const SH=x=>{const o=x[1].map((t,i)=>[t,i==x[2]]);if(o.every(a=>/^\d+$/.test(a[0])))return x;const fx=a=>/^(Tất cả|Cả )/.test(a[0]),f=o.filter(fx),r=o.filter(a=>!fx(a));for(let i=r.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[r[i],r[j]]=[r[j],r[i]]}const m=r.concat(f);return [x[0],m.map(a=>a[0]),m.findIndex(a=>a[1]),x[3],x[4]]};
+D[0].mc.push(
+['🟡 Saccharose không có tính khử vì:',['Hai carbon bán acetal của glucose và fructose đã được dùng để nối với nhau','Phân tử saccharose không chứa bất kỳ nhóm OH tự do nào','Fructose trong saccharose đã bị oxy hóa thành acid sẵn','Liên kết nối hai đường là liên kết peptid rất bền vững'],0,'Tính khử đến từ nhóm bán acetal: khi đầu này còn tự do thì vòng mở ra, lộ nhóm aldehyd hoặc ceton để khử Cu²⁺. Ở saccharose, liên kết α-1-β-2 chiếm luôn C1 của glucose và C2 của fructose, cả hai đầu đều bị khóa nên không mở vòng được. Maltose và lactose chỉ khóa một đầu nên vẫn khử được. Đáp án nói saccharose không còn OH nào là sai: nó vẫn có nhiều OH thường, chỉ OH bán acetal là đã dùng hết.'],
+['🟡 Cellulose và tinh bột đều gồm glucose, nhưng khác nhau ở:',['Kiểu liên kết glycosid nối các glucose (β-1,4 và α-1,4)','Loại đường tạo nên mạch (glucose và fructose)','Số nguyên tử carbon của mỗi đơn vị đường','Việc mạch có chứa nitơ hay không'],0,'Cả hai đều là polymer của glucose nhưng đổi kiểu nối từ α sang β thì hình dạng mạch và tính chất thay đổi hẳn. Người có enzym cắt α-1,4 nên tiêu hóa được tinh bột; không có enzym cắt β-1,4 nên cellulose đi qua ruột gần như nguyên. Vì thế cellulose chỉ là chất xơ, còn tinh bột là nguồn năng lượng.'],
+['🔴 Đường phân kỵ khí chỉ lãi 2 ATP, còn hiếu khí thu khoảng 30 ATP. Lý do chính là:',['Sản phẩm đường phân được oxy hóa tiếp ở ty thể khi có oxy','Hiếu khí dùng nhiều phân tử glucose hơn mỗi lần','Kỵ khí thiếu hoàn toàn các enzym của đường phân','Hiếu khí dùng lipid thay glucose làm nguyên liệu'],0,'Đường phân chỉ là bước đầu, diễn ra ở bào tương và lãi ròng 2 ATP (dùng 2, tạo 4). Khi có oxy, sản phẩm đi vào ty thể qua chu trình acid citric và chuỗi hô hấp nên thu thêm rất nhiều ATP. Đáp án nói kỵ khí thiếu enzym đường phân là sai: chính kỵ khí vẫn chạy đường phân bình thường, chỉ là dừng lại ở đó.']);
+D[1].mc.push(
+['🟢 Khung chung của một amino acid gồm:',['Nhóm amin, nhóm carboxyl, H và nhóm R cùng gắn vào carbon α','Nhóm amin, nhóm carboxyl và một vòng đường ở đầu mạch','Hai nhóm carboxyl và một nhóm R gắn vào nitơ','Một nhóm amin và ba nhóm R khác nhau gắn vào carbon'],0,'Mọi amino acid dùng chung một khung: carbon α gắn NH₂, COOH, H và một nhóm R. 20 loại amino acid khác nhau chỉ ở nhóm R (nhỏ như H ở glycine, có S ở cysteine, có vòng ở phenylalanine). Hiểu khung này là nền để hiểu vì sao amino acid nối được thành peptide và vì sao có dãy D, L.'],
+['🟢 Liên kết nối các amino acid thành peptide là:',['Liên kết peptid (CO–NH) giữa COOH và NH₂ của hai amino acid','Liên kết glycosid giữa hai nhóm OH của hai phân tử đường','Liên kết ester giữa acid béo và nhóm OH của glycerol','Liên kết hydro giữa hai bazơ nitơ của hai chuỗi'],0,'Nhóm COOH của amino acid này phản ứng với nhóm NH₂ của amino acid kia, mất đi một phân tử nước, tạo liên kết CO–NH gọi là liên kết peptid. Glycosid nối đường, ester nối lipid, còn liên kết hydro là liên kết yếu giữa hai mạch (ví dụ trong DNA). Mỗi loại phân tử sinh học có một kiểu nối riêng, đây là câu hay nhầm.'],
+['🟡 Vì sao glycine không quang hoạt còn alanine thì có?',['Carbon α của glycine gắn hai nguyên tử H giống nhau nên không bất đối','Glycine thiếu nhóm amin nên không tạo được đồng phân','Glycine có phân tử quá nhỏ để quay mặt phẳng phân cực','Glycine chỉ tồn tại dưới dạng D nên không có đối quang'],0,'Quang hoạt cần carbon gắn 4 nhóm khác nhau (carbon bất đối). Ở alanine, carbon α gắn NH₂, COOH, H và CH₃ nên có hai dạng gương nhau (D và L). Ở glycine, R chính là H nên carbon α có hai H giống nhau, không còn bất đối. Đây là loại duy nhất trong 20 amino acid có đặc điểm đó.'],
+['🟡 Ở pH trung hòa amino acid tồn tại chủ yếu dưới dạng ion lưỡng cực vì:',['COOH nhường H⁺ thành COO⁻ còn NH₂ nhận H⁺ thành NH₃⁺','Cả hai nhóm cùng nhường H⁺ nên phân tử mang điện âm','Cả hai nhóm cùng nhận H⁺ nên phân tử mang điện dương','Các nhóm giữ nguyên dạng không phân ly trong nước'],0,'Trong nước ở pH gần 7, COOH là acid yếu nên dễ mất H⁺ thành COO⁻, còn NH₂ là bazơ yếu nên dễ nhận H⁺ thành NH₃⁺. Một đầu âm, một đầu dương, tổng điện tích bằng 0: đây gọi là ion lưỡng cực. Nếu thêm acid mạnh, COO⁻ nhận H⁺ và phân tử mang điện dương; thêm kiềm thì NH₃⁺ nhường H⁺ và mang điện âm.'],
+['🔴 Histamin được tạo từ histidine nhờ phản ứng:',['Mất nhóm COOH dưới dạng CO₂ (decarboxylation)','Thêm một nhóm phosphat vào nhóm amin','Oxy hóa nhóm amin thành nhóm ceton','Thủy phân liên kết peptid ở đầu N'],0,'Decarboxylation nghĩa là cắt nhóm COOH ra khỏi amino acid dưới dạng CO₂, để lại một amin. Histidine mất COOH thì thành histamin, chất trung gian liên quan dị ứng và viêm. Bạn có thể đoán tên amin từ tên amino acid: HISTidine → HISTamin. Nhớ đúng kiểu phản ứng này sẽ giúp bạn trả lời được cả những amin khác.'],
+['🔴 Glutathione (Glu–Cys–Gly) có chứa lưu huỳnh là nhờ gốc nào?',['Cysteine, vì chuỗi bên có nhóm SH','Glutamate, vì chuỗi bên có thêm một nhóm carboxyl','Glycine, vì chỉ có một H ở chuỗi bên','Cả ba gốc đều chứa nguyên tử lưu huỳnh'],0,'Trong ba gốc chỉ cysteine có nhóm SH (thiol) trong chuỗi bên. Methionine và cysteine là hai amino acid còn lại trong nhóm chứa S, còn threonine thì không. Nhóm SH của cysteine cũng giải thích vai trò chống oxy hóa của glutathione.']);
+D[2].mc.push(
+['🟢 Lipoprotein nào đưa cholesterol từ gan đến các mô ngoại biên?',['LDL, mang cholesterol từ gan đến mô','HDL, mang cholesterol từ gan đến mô','Chylomicron, mang cholesterol nội sinh từ gan','VLDL, mang cholesterol từ mô về gan'],0,'LDL là loại chứa nhiều cholesterol nhất và đưa cholesterol đến mô, nên cao quá thì dễ lắng đọng ở thành mạch. HDL làm việc ngược lại: thu cholesterol thừa từ mô về gan để đào thải. Nhớ hướng đi của mỗi loại sẽ giúp bạn không phải học vẹt xem loại nào tốt hay xấu.'],
+['🟡 Vì sao LDL cao dễ gây xơ vữa còn HDL cao lại bảo vệ?',['LDL đưa cholesterol vào thành mạch còn HDL thu cholesterol từ mô về gan','LDL chứa nhiều protein nên dễ bám vào thành mạch','HDL chứa nhiều triglyceride nên đào thải nhanh hơn','LDL và HDL giống nhau, chỉ khác nồng độ trong máu'],0,'Hai loại lipoprotein vận chuyển cholesterol theo hai hướng ngược nhau nên tác dụng cũng ngược nhau. LDL đưa cholesterol vào vách mạch, lâu ngày tạo mảng xơ vữa; HDL dọn cholesterol ra khỏi mô về gan. Đây là lý do HDL được gọi là cholesterol tốt và LDL là cholesterol xấu.'],
+['🔴 Một người có HDL thấp và LDL cao. Nguy cơ lớn nhất là:',['Xơ vữa động mạch do cholesterol lắng đọng ở thành mạch','Thiếu máu do thiếu sắt trong chế độ ăn','Hạ đường huyết do tăng tiết insulin','Phù do giảm albumin trong máu'],0,'LDL cao thì đưa nhiều cholesterol vào thành mạch, HDL thấp thì khả năng dọn cholesterol ra khỏi mô yếu. Cả hai cùng lúc làm cholesterol tích tụ ở thành động mạch, gây xơ vữa. Các đáp án kia là bệnh liên quan đến máu, đường huyết và protein huyết tương, không phải vấn đề của lipoprotein.']);
+D[3].mc.push(
+['🟡 Albumin giữ nước trong lòng mạch nhờ loại áp suất nào?',['Áp suất keo, do protein lớn không đi qua được thành mạch','Áp suất thẩm thấu, do các ion nhỏ như Na⁺ tạo ra','Áp suất thủy tĩnh, do tim bơm máu tạo ra','Áp suất khí quyển tác dụng lên thành mạch'],0,'Albumin là protein lớn không qua được thành mạch, nên kéo nước vào lại trong mạch bằng áp suất keo. Các ion nhỏ như Na⁺ thì tạo áp suất thẩm thấu, đúng với phần đã học ở câu trước. Khi albumin giảm, nước dễ rò ra mô kẽ và gây phù. Đây là cặp khái niệm áp suất thẩm thấu và áp suất keo rất hay bị đảo lộn.'],
+['🟡 Vì sao hội chứng thận hư làm albumin máu giảm?',['Màng lọc cầu thận tổn thương nên albumin lọt qua nước tiểu','Gan ngừng tổng hợp albumin do viêm gan cấp','Albumin bị phá hủy hàng loạt ở phổi','Thận tạo ra quá ít albumin so với nhu cầu'],0,'Bình thường màng lọc cầu thận giữ albumin lại trong máu. Ở hội chứng thận hư màng lọc bị tổn thương nên albumin rò ra nước tiểu (protein niệu nhiều), làm albumin máu giảm. Gan vẫn sản xuất bình thường, thận cũng không phải nơi tạo albumin. Nhìn vào đây bạn thấy cùng một kết quả “albumin giảm” nhưng nguyên nhân ở mỗi bệnh rất khác nhau.'],
+['🟡 Vì sao suy gan nặng làm albumin máu giảm?',['Gan là nơi tổng hợp albumin nên gan suy thì tạo không đủ','Gan thải một lượng lớn albumin vào mật','Gan chuyển albumin thành ure nên albumin giảm','Suy gan làm thận lọc mất albumin qua nước tiểu'],0,'Albumin do gan tổng hợp, nên khi gan suy nặng lượng albumin được tạo ra giảm rõ rệt. Đây là lý do albumin máu được dùng đánh giá chức năng tổng hợp của gan. So với thận hư (mất qua nước tiểu), ở đây nguyên nhân là gan không sản xuất đủ. Đáp án ngược như chuyển thành ure hay thải vào mật đều không đúng.'],
+['🔴 Ure máu tăng, ure niệu giảm, creatinin máu tăng. Kết luận hợp lý nhất:',['Chức năng lọc của thận suy giảm','Chức năng tuyến giáp suy giảm','Thiếu hụt vitamin C kéo dài','Tăng đường huyết do thiếu insulin'],0,'Ure và creatinin đều là chất thải do thận lọc ra nước tiểu. Thận lọc kém thì cả hai ứ lại trong máu (tăng) và ra nước tiểu ít đi (giảm). Hai dấu hiệu cùng chiều giúp bạn chắc chắn hơn là vấn đề ở thận, không phải các bệnh nội tiết hay thiếu vitamin.'],
+['🔴 Natri ảnh hưởng nhiều nhất đến độ thẩm thấu vì:',['Na⁺ cùng anion đi kèm chiếm phần lớn số hạt hòa tan ở dịch ngoại bào','Na⁺ có phân tử khối lớn hơn mọi chất tan khác','Na⁺ không tan nên giữ nước ở lại trong mạch','Na⁺ chỉ xuất hiện trong nước tiểu của bệnh nhân'],0,'Áp suất thẩm thấu phụ thuộc vào SỐ HẠT hòa tan, không phụ thuộc kích thước hạt. Na⁺ là cation chính của dịch ngoại bào và mang theo anion (Cl⁻, HCO₃⁻), nên các hạt Na⁺ và anion chiếm phần lớn độ thẩm thấu. Ure và glucose đóng góp thêm, còn protein chiếm rất ít.']);
+D[4].mc.push(
+['🟢 Nguyên tố vi lượng rất ít nhưng không thể thiếu vì:',['Chúng hoạt hóa hoặc ức chế enzym, tham gia tạo máu dù lượng rất nhỏ','Chúng tạo khung cấu trúc chính của tế bào và mô','Chúng cung cấp phần lớn năng lượng cho hoạt động sống','Chúng tạo nên phần lớn khối lượng nước trong cơ thể'],0,'Tầm quan trọng của vi lượng không nằm ở số lượng mà ở chức năng. Zn, Fe, Cu gắn vào enzym hoặc tham gia tạo máu, thiếu là rối loạn. Việc tạo khung tế bào là việc của nhóm đa lượng như O, C, H, N.'],
+['🟡 Enzym và hormon khác nhau ở chỗ:',['Enzym do mọi tế bào tạo ra để xúc tác, hormon do tuyến chuyên biệt tiết để điều hòa','Enzym có bản chất lipid còn hormon có bản chất protein','Hormon xúc tác phản ứng còn enzym điều hòa chức năng','Enzym và hormon đều do cùng một tuyến duy nhất tiết ra'],0,'Enzym là protein, do mọi tế bào sản xuất và giữ vai trò xúc tác cho phản ứng hóa học. Hormon do các tuyến chuyên biệt sản xuất và có tác dụng điều hòa chức năng cơ quan. Một bên là công cụ thực hiện phản ứng, một bên là tín hiệu điều khiển.'],
+['🟡 Thứ tự các mức tổ chức từ nhỏ đến lớn đúng là:',['Đơn vị cấu tạo → đại phân tử → bào quan → tế bào → cơ thể','Tế bào → đơn vị cấu tạo → đại phân tử → bào quan → cơ thể','Đại phân tử → tế bào → đơn vị cấu tạo → bào quan → cơ thể','Bào quan → đơn vị cấu tạo → đại phân tử → tế bào → cơ thể'],0,'Theo slide: tiền chất → chất trung gian → đơn vị cấu tạo → đại phân tử → phức hợp → bào quan → tế bào → cơ thể. Ví dụ acid amin nối thành protein, protein lắp thành ribosome, ribosome nằm trong tế bào. Mỗi bước là một cấp tổ chức lớn hơn nên chỉ cần hỏi “con là thành phần của cái nào”.'],
+['🔴 Một tế bào mất lysosom sẽ gặp khó khăn rõ nhất ở việc nào?',['Phân giải các chất cần thủy phân trong tế bào','Tổng hợp protein vì thiếu ribosome','Thực hiện chu trình acid citric','Phân giải H₂O₂ sinh ra trong tế bào'],0,'Lysosom chứa nhiều hydrolase (ví dụ phosphatase acid) để thủy phân và phân giải chất. Mất lysosom thì việc phân giải này bị ứ trệ. Tổng hợp protein là việc của ribosome, chu trình acid citric là của ty thể, phân giải H₂O₂ là của peroxisom.'],
+['🔴 Tế bào đang tổng hợp rất nhiều protein thì sẽ có nhiều:',['Ribosome, vì đây là nơi lắp ráp protein','Lysosom, vì cần nhiều enzym thủy phân','Peroxisom, vì cần nhiều catalase','Hạt nhân, vì đây là nơi tổng hợp protein'],0,'Ribosome là bào quan không màng, chứa nhiều RNA và lắp ráp protein; tế bào làm protein nhiều thì cần nhiều ribosome. Hạt nhân chỉ chứa DNA và tổng hợp RNA, không phải nơi lắp ráp protein. Đây là câu dễ nhầm vì nhân “điều khiển” nhưng không trực tiếp lắp protein.']);
+D[5].mc.push(
+['🟢 Phân biệt PS thuần và PS tạp dựa vào:',['PS thuần chỉ gồm một loại đường lặp lại, PS tạp gồm nhiều loại đường hoặc dẫn xuất','PS thuần tan trong nước còn PS tạp thì không tan','PS thuần có mạch nhánh còn PS tạp chỉ có mạch thẳng','PS thuần có chứa nitơ còn PS tạp chỉ có carbon'],0,'Tinh bột, glycogen, cellulose đều chỉ gồm glucose nên là PS thuần. Hyaluronic, chondroitin sulfat, heparin gồm nhiều loại đường và dẫn xuất (glucosamine, acid uronic, có thể thêm sulfat), nên là PS tạp. Tiêu chí phân loại là thành phần đơn vị, không phải độ tan hay mạch nhánh.'],
+['🟢 Liên kết glycosid được hình thành giữa:',['OH bán acetal của một đường với OH hoặc NH₂ của chất khác','Hai nhóm carboxyl của hai phân tử acid','Hai nhóm amin của hai amino acid kế nhau','Nhóm phosphat và nhóm OH của glycerol'],0,'Đây là liên kết đặc trưng của glucid, và cũng là liên kết nối các đường đơn thành đường đôi, đường đa. Nếu đầu kia là OH thì gọi O-glycosid, nếu là NH₂ thì gọi N-glycosid. Các đáp án còn lại mô tả liên kết peptid hoặc ester, không phải glycosid.'],
+['🟡 Đường có tính khử vì:',['Có nhóm aldehyd hoặc ceton có thể khử Cu²⁺ trong kiềm nóng','Có vòng benzen dễ bị oxy hóa','Có nhóm amin tạo màu với thuốc thử','Có liên kết peptid bị thủy phân bởi kiềm'],0,'Nhóm chức khử (aldehyd hoặc ceton) nhường electron cho Cu²⁺ trong môi trường kiềm nóng, tạo kết tủa đỏ gạch Cu₂O (thuốc thử Fehling), còn đường bị oxy hóa thành acid. Glucose không có vòng benzen, nitơ hay liên kết peptid.'],
+['🟡 Phản ứng Molisch hoạt động dựa trên cơ sở:',['Acid mạnh tách nước đường thành furfural, rồi kết hợp phenol cho màu','Đường bị khử thành rượu đa chức tạo kết tủa','Đường bị oxy hóa hoàn toàn thành CO₂ và nước','Đường tạo tinh thể đặc thù với phenylhydrazin'],0,'Acid đậm đặc làm mất nước đường thành furfural hoặc dẫn xuất, chất này kết hợp với dẫn chất phenol cho màu tím đỏ đặc trưng. Vì mọi glucid đều cho furfural nên Molisch chỉ cho biết có glucid, không phân biệt được loại nào. Đáp án nói về tinh thể là phản ứng tạo osazon, còn khử thành rượu là tính oxi hóa (bị khử) của đường.'],
+['🟡 Vì sao lactose và maltose có tính khử còn sacarose thì không?',['Sacarose dùng cả hai carbon bán acetal để nối, lactose và maltose còn một đầu tự do','Sacarose không chứa glucose nên không có nhóm khử','Lactose có nhiều nhóm OH hơn nên dễ bị oxy hóa','Maltose và lactose có vòng 5 cạnh còn sacarose vòng 6'],0,'Maltose nối α-1,4 và lactose nối β-1,4: mỗi liên kết chỉ dùng một đầu bán acetal, đầu còn lại tự do nên mở vòng được và khử được. Sacarose nối α-1-β-2 nên khóa cả hai đầu, không còn nhóm khử tự do. Sacarose có glucose (gồm glucose + fructose), nên đáp án nói thiếu glucose là sai.'],
+['🟡 Chuyển từ α-D-glucose sang β-D-glucose chỉ thay đổi:',['Vị trí OH ở C1 (từ hướng xuống thành hướng lên)','Vị trí OH ở C4 (từ hướng xuống thành hướng lên)','Số nguyên tử carbon của vòng','Loại đường: glucose thành galactose'],0,'α và β chỉ khác nhau ở OH của carbon C1 (carbon bán acetal): xuống là α, lên là β. Hai dạng này chuyển qua lại được thông qua dạng mạch thẳng trong dung dịch. Nếu đổi OH ở C4 thì đã thành đường khác (galactose), không còn là α/β.'],
+['🔴 Mẫu cho màu đỏ cam với Seliwanoff và khử Fehling dương tính. Chất này nhiều khả năng là:',['Fructose','Tinh bột','Glycogen','Cellulose'],0,'Seliwanoff cho màu đỏ cam là đặc trưng của đường cetose như fructose; fructose còn là đường đơn nên khử được Fehling. Tinh bột, glycogen, cellulose là đường đa, không đủ phản ứng nhanh để cho Seliwanoff và Fehling dương tính.']);
+D[6].mc.push(
+['🟢 Để biết hình Fischer thuộc dãy D hay L ta nhìn vào:',['OH của carbon xa nhóm CHO nhất','OH của carbon số 1','Số nguyên tử carbon trong mạch','Vị trí nhóm CH₂OH ở cuối mạch'],0,'D hay L được quy ước theo carbon bất đối xa nhóm carbonyl nhất (với glucose là C5): OH bên phải là D, bên trái là L. Các carbon khác chỉ quyết định đây là đường nào (glucose, galactose, mannose...).'],
+['🟡 Hai đường chỉ khác nhau OH ở một carbon duy nhất (không phải C1) gọi là:',['Epimer','Enantiomer','Polymer','Anomer'],0,'Glucose và galactose là epimer ở C4; glucose và mannose là epimer ở C2. Enantiomer là hai dạng gương của nhau (đảo toàn bộ, như D và L-glucose). Anomer là hai dạng khác nhau ở C1 (α và β).'],
+['🟡 α-glucose và β-glucose (cùng dãy D) khác nhau ở:',['OH ở carbon C1 (carbon bán acetal)','OH ở carbon C4 của vòng','Số nguyên tử carbon','Có hay không có nhóm CHO'],0,'Chỉ OH ở C1 đổi hướng: xuống là α, lên là β. Đây là hai dạng của cùng một đường (anomer), tự chuyển qua lại trong dung dịch. Chỉ khi đổi OH ở C2 hay C4 mới ra đường khác.'],
+['🔴 Đảo cả 4 OH ở C2 đến C5 của D-glucose thì thu được:',['L-glucose','D-galactose','D-mannose','D-fructose'],0,'Đảo tất cả OH tạo ra ảnh gương của phân tử, tức L-glucose (enantiomer). Đảo chỉ một carbon thì ra đường khác: C4 → galactose, C2 → mannose. Fructose là cetose nên có cấu trúc khác hẳn, không phải chỉ đảo OH.'],
+['🔴 Hình này là:',['α-D-mannopyranose','α-D-glucopyranose','β-D-glucopyranose','α-D-galactopyranose'],0,'C1 hướng xuống nên là α. So với glucose (xuống, lên, xuống ở C2, C3, C4), ở đây C2 đảo lên trên nên là mannose. Nếu C4 đảo thì là galactose.','H:duud'],
+['🔴 Hình này là:',['β-D-galactopyranose','β-D-glucopyranose','α-D-galactopyranose','β-D-mannopyranose'],0,'C1 hướng lên nên là β. C4 hướng lên (glucose là hướng xuống) nên là galactose. Kết hợp hai dấu hiệu đó ra β-D-galactopyranose.','H:uduu']);
+D[7].mc.push(
+['🟡 Vì sao hình này không có dãy D hay L dù có carbon α?',['Carbon α gắn hai nguyên tử H giống nhau nên không bất đối','Glycine không có nhóm amin ở carbon α','Glycine chỉ có dạng D nên không có đối quang','Glycine quá nhỏ nên không quay được mặt phẳng phân cực'],0,'D hay L chỉ có ý nghĩa khi carbon α gắn 4 nhóm khác nhau. Ở glycine, R là H nên carbon α có hai H giống nhau, không bất đối, nên không có hai dạng gương và không quang hoạt.','A:L:Gly'],
+['🔴 Dạng amino acid này hiếm gặp trong protein người vì:',['Protein người chỉ được xây từ L-amino acid','D-amino acid luôn gây độc cho tế bào','D-amino acid không tồn tại trong tự nhiên','D-amino acid không có nhóm R nên không tạo peptid'],0,'NH₂ bên phải là dãy D. Trong protein người, ribosome chỉ dùng L-α-amino acid để lắp ráp peptid. D-amino acid vẫn tồn tại trong tự nhiên (ví dụ ở một số vi khuẩn) và cũng có nhóm R như L, chỉ là không được dùng trong protein người.','A:D:Ala'],
+['🔴 Cysteine khác serine ở nguyên tố nào?',['S của cysteine thay cho O của serine','N của cysteine thay cho C của serine','Cl của cysteine thay cho OH của serine','P của cysteine thay cho OH của serine'],0,'Serine có R là CH₂OH, cysteine có R là CH₂SH; hai chất giống nhau, chỉ khác nguyên tố cuối (S thay cho O). Nhóm SH này chính là lý do cysteine thuộc nhóm amino acid chứa lưu huỳnh.','A:L:Cys'],
+['🔴 Dạng ion lưỡng cực này khi thêm acid mạnh (H⁺) thì nhóm nào nhận H⁺?',['COO⁻ nhận H⁺ và trở thành COOH','NH₃⁺ nhận thêm H⁺ thành NH₄²⁺','Nhóm CH₃ nhận H⁺ thành CH₄','Nguyên tử H ở carbon α bị đẩy ra'],0,'Trong môi trường acid, đầu âm COO⁻ nhận H⁺ quay về COOH, còn NH₃⁺ vẫn giữ. Phân tử khi đó mang điện dương. NH₃⁺ đã đủ H nên không nhận thêm được nữa.','A:L:Ala:z']);
+[[4,4,['Mononucleotid','Monosaccharid','Triglyceride','Dipeptid']],[4,6,['Các tuyến chuyên biệt','Mọi tế bào trong cơ thể','Chỉ riêng gan và thận','Chỉ các tế bào máu']],[4,7,['Dùng ánh sáng tổng hợp chất hữu cơ từ chất vô cơ','Chỉ ăn chất hữu cơ do sinh vật khác tạo ra','Không cần năng lượng cho các hoạt động sống','Chỉ sống ký sinh trong cơ thể sinh vật khác']],[4,9,['Không màng, tổng hợp protein','Màng đôi, tạo năng lượng ATP','Màng đơn, chứa nhiều hydrolase','Màng đơn, phân giải H₂O₂']],[4,13,['Tổng hợp DNA (nhân đôi)','Tích lũy vật chất tế bào','Chuẩn bị cho phân chia','Tế bào đang phân chia']],[4,14,['Hoạt hóa hoặc ức chế enzym, tham gia tạo máu','Tạo khung cấu trúc chính của tế bào và mô','Cung cấp phần lớn năng lượng cho cơ thể','Tạo nên phần lớn khối lượng nước trong cơ thể']],[4,15,['Enzym do mọi tế bào tạo để xúc tác, hormon do tuyến tiết để điều hòa','Enzym có bản chất là lipid còn hormon có bản chất là protein','Hormon xúc tác các phản ứng còn enzym điều hòa chức năng cơ quan','Enzym và hormon đều do cùng một tuyến duy nhất tiết ra']],[4,17,['Phân giải các chất cần thủy phân','Tổng hợp protein vì thiếu ribosome','Thực hiện chu trình acid citric','Phân giải H₂O₂ sinh ra trong tế bào']],
+[5,0,['Disaccharid (đường đôi)','Monosaccharid (đường đơn)','Polysaccharid thuần','Polysaccharid tạp']],[5,3,['Glucose + glucose (α-1,4)','Glucose + fructose (α-1-β-2)','Glucose + galactose (β-1,4)','Fructose + galactose (α-1,2)']],[5,4,['Glucose + galactose (β-1,4)','Glucose + glucose (α-1,4)','Glucose + fructose (α-1-β-2)','Galactose + galactose (β-1,4)']],[5,6,['OH ở C xa carbonyl nhất nằm bên phải','OH ở C1 nằm phía dưới vòng','Có nhóm ceton ở vị trí C2','Có vòng 6 cạnh dạng pyran']],[5,7,['Phía dưới mặt phẳng vòng','Phía trên mặt phẳng vòng','Bên trái của vòng','Trùng với mặt phẳng vòng']],[5,9,['Tính khử (tạo Cu₂O đỏ gạch)','Tính oxi hóa (bị khử thành rượu)','Khả năng tạo ester với acid','Khả năng tạo glycosid với rượu']],[5,10,['Fructose (đỏ cam) với glucose (không màu)','Maltose với lactose trong hỗn hợp đường','Tinh bột với glycogen khi có iod','Pentose với hexose khi đun nóng']],
+[5,13,['PS thuần chỉ gồm một loại đường lặp lại, PS tạp gồm nhiều loại hoặc dẫn xuất','PS thuần tan được trong nước nóng còn PS tạp thì hoàn toàn không tan','PS thuần có mạch nhánh còn PS tạp chỉ có mạch thẳng không phân nhánh','PS thuần có chứa nitơ trong mạch còn PS tạp chỉ chứa carbon và oxy']],[5,14,['OH bán acetal của một đường với OH hoặc NH₂ chất khác','Hai nhóm carboxyl của hai phân tử acid hữu cơ','Hai nhóm amin của hai amino acid đứng cạnh nhau','Nhóm phosphat của ATP với nhóm OH của glycerol']],[5,15,['Có nhóm aldehyd hoặc ceton khử được Cu²⁺ trong kiềm nóng','Có vòng benzen nên rất dễ bị oxy hóa bởi không khí','Có nhóm amin nên tạo màu với thuốc thử kiềm nóng','Có liên kết peptid nên bị thủy phân bởi dung dịch kiềm']],[5,16,['Acid mạnh tách nước đường thành furfural rồi kết hợp phenol cho màu','Đường bị khử thành rượu đa chức rồi tạo kết tủa màu đỏ','Đường bị oxy hóa hoàn toàn thành CO₂ và nước có màu','Đường tạo tinh thể đặc thù khi gặp phenylhydrazin dư']],[5,17,['Sacarose dùng cả hai carbon bán acetal để nối, lactose và maltose còn một đầu tự do','Sacarose không chứa glucose trong phân tử nên không có nhóm khử nào','Lactose có nhiều nhóm OH hơn sacarose nên dễ bị oxy hóa hơn nhiều','Maltose và lactose có vòng 5 cạnh còn sacarose chỉ có vòng 6 cạnh']]].forEach(([t,i,o])=>{D[t].mc[i][1]=o;D[t].mc[i][2]=0});
+const fig=k=>{const s=k.slice(2),c='stroke="currentColor" stroke-width="2" fill="none"',T=(x,y,t,a)=>`<text x="${x}" y="${y}" text-anchor="${a||'middle'}" fill="currentColor">${t}</text>`;let o='';
+if(k[0]=='F'){o=`<path d="M100 30V150" ${c}/>`+T(100,22,'CHO')+T(100,175,'CH₂OH');[...s].forEach((h,i)=>{const y=58+i*30,r=h=='R';o+=`<path d="M70 ${y}H130" ${c}/>`+T(62,y+5,r?'H':'OH','end')+T(138,y+5,r?'OH':'H','start')})}
+else if(k[0]=='A'){const[d,r,z]=s.split(':'),R={Gly:'H',Ala:'CH₃',Ser:'CH₂OH',Cys:'CH₂SH',Val:'CH(CH₃)₂',Phe:'CH₂C₆H₅'}[r],L=d=='L',NH=z?'NH₃⁺':'NH₂',CO=z?'COO⁻':'COOH';o=`<path d="M100 30V150" ${c}/><path d="M70 90H130" ${c}/>`+T(100,22,CO)+T(100,172,R)+(r=='Gly'?T(62,95,'H','end')+T(138,95,'H','start'):T(62,95,L?NH:'H','end')+T(138,95,L?'H':NH,'start'))}
+else{const P=[[160,80],[130,115],[70,115],[40,80]];o=`<path d="M70 45H130L160 80L130 115H70L40 80Z" ${c}/><circle cx="130" cy="45" r="9" fill="var(--card)"/>`+T(130,50,'O')+`<path d="M70 45V25" ${c}/>`+T(70,18,'CH₂OH');[...s].forEach((h,i)=>{const[x,y]=P[i],u=h=='u';o+=`<path d="M${x} ${y}V${u?y-22:y+22}" ${c}/>`+T(x,u?y-27:y+38,'OH')})}
+return `<svg viewBox="0 0 200 ${k[0]=='H'?165:190}" width="190" style="display:block;margin:6px auto;color:var(--ink);font:600 14px sans-serif">${o}</svg>`};
+const IM=x=>{const k=ty=="mc"?x[4]:(ty=="tf"||ty=="fb")?x[3]:null;return typeof k=="string"?fig(k):""};
+const T=[["mc","Trắc nghiệm"],["tf","Đúng / Sai"],["fb","Điền khuyết"],["cl","Câu chùm"]];
+let ti=0,ty="mc",done,right;
+const $=id=>document.getElementById(id);
+function tabs(){if(!D[ti][ty])ty="mc";$("notes").style.display=(D[ti].notes&&ty=="fb")?"block":"none";if(D[ti].notes)$("gd").innerHTML=D[ti].guide;
+$("topics").innerHTML=D.map((d,i)=>`<button class="chip ${i==ti?'on':''}" onclick="ti=${i};render()">${d.e} Đề ${i+1}: ${d.n}</button>`).join("");
+$("types").innerHTML=T.filter(t=>D[ti][t[0]]).map(t=>`<button class="chip ${t[0]==ty?'on':''}" onclick="ty='${t[0]}';render()">${t[1]} (${D[ti][t[0]].length})</button>`).join("");}
+function upd(){$("score").textContent=`Đúng ${right}/${ty=="cl"?D[ti].cl.reduce((a,c)=>a+c[1].length,0):D[ti][ty].length} · đã làm ${done}`}
+function mark(box,ok,msg){done++;if(ok)right++;upd();if(msg)box.querySelector(".fb").innerHTML=msg}
+function render(){tabs();done=0;right=0;if(ty=="cl")return renderCL(D[ti].cl);const q=ty=="mc"?D[ti].mc.map(SH):D[ti][ty];
+$("desc").textContent=ty=="mc"?"Chọn 1 đáp án đúng nhất. 🟢 Bản chất · 🟡 Hiểu và so sánh · 🔴 Vận dụng. Càng xuống dưới càng khó.":ty=="tf"?"Nhận định sau đúng hay sai?":"Gõ từ còn thiếu rồi bấm Kiểm tra.";
+$("list").innerHTML=q.map((x,i)=>{
+let b="";
+if(ty=="mc")b=x[1].map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join("");
+if(ty=="tf")b=`<div class="row"><button class="opt" data-j="1">Đúng</button><button class="opt" data-j="0">Sai</button></div>`;
+if(ty=="fb")b=`<input class="fill" placeholder="Đáp án…"><button class="go">Kiểm tra</button>`;
+return `<div class="q" data-i="${i}"><h3><span>${i+1}.</span>${ty=="mc"?x[0]:ty=="tf"?x[0]:x[0].replace("___","<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>")}</h3>${IM(x)}${b}<div class="fb"></div></div>`}).join("");
+document.querySelectorAll("#list .q").forEach(box=>{const x=q[box.dataset.i];
+if(ty=="fb"){const inp=box.querySelector("input"),go=box.querySelector(".go");let tries=0;const chk=()=>{if(box.dataset.d)return;const ok=x[1].some(a=>N(a)==N(inp.value));tries++;if(!ok&&tries<2){inp.style.borderColor="var(--no)";box.querySelector(".fb").innerHTML="❌ Chưa đúng, thử lại nhé (bấm Kiểm tra lần nữa để xem đáp án).";return}box.dataset.d=1;inp.style.borderColor=ok?"var(--ok)":"var(--no)";mark(box,ok,(ok?"✅ Chính xác! ":"❌ Đáp án: ")+"<b>"+x[1][0]+"</b><br>💡 "+((EXP[ti]?EXP[ti].fb[box.dataset.i]:x[2])||""))};go.onclick=chk;inp.onkeydown=e=>{if(e.key=="Enter")chk()}}
+else box.querySelectorAll(".opt").forEach(btn=>btn.onclick=()=>{if(box.dataset.d)return;box.dataset.d=1;const j=+btn.dataset.j;const c=ty=="mc"?x[2]:(x[1]?1:0);
+box.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.j;if(k==c)o.classList.add("ok");else if(k==j)o.classList.add("no");else o.classList.add("dim")});
+const ex=(EXP[ti]&&EXP[ti][ty][box.dataset.i])||(ty=="mc"?x[3]:x[2]);mark(box,j==c,(j==c?"✅ Đúng.":"❌ Sai.")+(ex?"<br>💡 "+ex:""))})});
+upd();window.scrollTo({top:0})}
+render();
+</script>
+</body>
+</html>
